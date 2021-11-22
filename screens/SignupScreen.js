@@ -11,6 +11,10 @@ const signupFormSchema = Yup.object().shape({
   username: Yup.string()
     .required('A username is required.')
     .min(3, 'Username needs to be at least 3 characters long.'),
+  profession: Yup.string()
+    .required('A profession is required.')
+    .min(5, 'Profession needs to be at least 5 characters long.')
+    .max(20, 'Profession exceeded 20 characters.'),
   imgURL: Yup.string()
     .matches(
       /(http(s?):\/\/)([^\s(["<,>/]*)(\/)[^\s[",><]*(.png|.jpg|.gif)(\?[^\s[",><]*)?/g,
@@ -23,8 +27,8 @@ const signupFormSchema = Yup.object().shape({
 })
 
 const SignupScreen = () => {
-  const onSignup = (email, password, username, imgURL) => {
-    console.log({ email, password, username, imgURL })
+  const onSignup = (email, password, username, profession, imgURL) => {
+    console.log({ email, password, username, profession, imgURL })
   }
 
   return (
@@ -39,12 +43,19 @@ const SignupScreen = () => {
       </View>
       <ScrollView>
         <Formik
-          initialValues={{ email: '', password: '', username: '', imgURL: '' }}
+          initialValues={{
+            email: '',
+            password: '',
+            username: '',
+            profession: '',
+            imgURL: '',
+          }}
           onSubmit={(values) =>
             onSignup(
               values.email,
               values.password,
               values.username,
+              values.profession,
               values.imgURL
             )
           }
@@ -102,6 +113,23 @@ const SignupScreen = () => {
                   onChangeText={handleChange('username')}
                   onBlur={handleBlur('username')}
                   value={values.username}
+                />
+
+                <Input
+                  style={{ marginBottom: 15 }}
+                  containerStyle={{
+                    paddingHorizontal: 0,
+                  }}
+                  errorStyle={{ color: 'red' }}
+                  errorMessage={
+                    values.profession.length >= 3 ? errors.profession : ''
+                  }
+                  placeholder="Profession"
+                  autoCapitalize="none"
+                  textContentType="profession"
+                  onChangeText={handleChange('profession')}
+                  onBlur={handleBlur('profession')}
+                  value={values.profession}
                 />
 
                 <Input
@@ -189,7 +217,7 @@ const SignupScreen = () => {
                 iconLeft
                 type="outline"
                 buttonStyle={{ borderColor: 'gray', borderRadius: 20 }}
-                style={{ marginBottom: 10, color: 'gray' }}
+                style={{ marginBottom: 20, color: 'gray' }}
                 titleStyle={{ color: 'gray' }}
               />
             </View>
