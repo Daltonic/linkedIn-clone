@@ -1,12 +1,25 @@
 import React from 'react'
 import StyleSheet from 'react-native-media-query'
-import { View, Image } from 'react-native'
+import { SafeAreaView, View, Image } from 'react-native'
 import { Button, CheckBox, Divider, Input, Text } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import { Formik } from 'formik'
+import * as Yup from 'yup'
+
+const loginFormSchema = Yup.object().shape({
+  email: Yup.string().email().required('A email is required'),
+  password: Yup.string()
+    .required('A password is required')
+    .min(6, 'Password needs to be at least 6 characters long'),
+})
 
 const LoginScreen = () => {
+  const onLogin = (email, password) => {
+    console.log({ email, password })
+  }
+
   return (
-    <View style={styles.container} dataSet={{ media: ids.container }}>
+    <SafeAreaView style={styles.container} dataSet={{ media: ids.container }}>
       <View style={styles.header} dataSet={{ media: ids.header }}>
         <Image
           style={styles.logo}
@@ -16,100 +29,146 @@ const LoginScreen = () => {
         <Button title="Join now" color="#016bb4" type="clear" />
       </View>
 
-      <View style={styles.formContainer} dataSet={{ media: ids.formContainer }}>
-        <Text h2 style={{ fontWeight: 500, marginTop: 40, marginBottom: 10 }}>
-          Sign in
-        </Text>
+      <Formik
+        initialValues={{ email: '', password: '' }}
+        onSubmit={(values) => onLogin(values.email, values.password)}
+        validationSchema={loginFormSchema}
+        validateOnMount={true}
+      >
+        {({
+          handleBlur,
+          handleChange,
+          handleSubmit,
+          values,
+          errors,
+          isValid,
+        }) => (
+          <View
+            style={styles.formContainer}
+            dataSet={{ media: ids.formContainer }}
+          >
+            <Text
+              h2
+              style={{ fontWeight: 500, marginTop: 40, marginBottom: 10 }}
+            >
+              Sign in
+            </Text>
 
-        <View>
-          <Input
-            style={{ marginBottom: 15 }}
-            containerStyle={{ paddingHorizontal: 0 }}
-            placeholder="Email or Phone"
-          />
+            <View>
+              <Input
+                style={{ marginBottom: 15 }}
+                containerStyle={{
+                  paddingHorizontal: 0,
+                }}
+                errorStyle={{ color: 'red' }}
+                errorMessage={values.email.length > 4 ? errors.email : ''}
+                placeholder="Email or Phone"
+                autoCapitalize="none"
+                keyboardType="email-address"
+                textContentType="emailAddress"
+                onChangeText={handleChange('email')}
+                onBlur={handleBlur('email')}
+                value={values.email}
+              />
 
-          <Input
-            style={{ marginBottom: 15 }}
-            containerStyle={{ paddingHorizontal: 0 }}
-            placeholder="Password"
-            secureTextEntry={true}
-            rightIcon={<Icon name="eye" size={15} color="gray" />}
-          />
+              <Input
+                style={{ marginBottom: 15 }}
+                containerStyle={{
+                  paddingHorizontal: 0,
+                }}
+                errorStyle={{ color: 'red' }}
+                errorMessage={
+                  values.password.length >= 3 ? errors.password : ''
+                }
+                rightIcon={<Icon name="eye" size={15} color="gray" />}
+                placeholder="Password"
+                secureTextEntry={true}
+                autoCapitalize="none"
+                textContentType="password"
+                autoCorrect={false}
+                onChangeText={handleChange('password')}
+                onBlur={handleBlur('password')}
+                value={values.password}
+              />
 
-          <CheckBox
-            title="Remember me"
-            checked={true}
-            checkedColor="#008400"
-            containerStyle={{
-              backgroundColor: 'transparent',
-              borderColor: 'transparent',
-              marginHorizontal: 0,
-              padding: 0,
-            }}
-            style={{marginVertical: 15}}
-          />
+              <CheckBox
+                title="Remember me"
+                checked={true}
+                checkedColor="#008400"
+                containerStyle={{
+                  backgroundColor: 'transparent',
+                  borderColor: 'transparent',
+                  marginHorizontal: 0,
+                  padding: 0,
+                }}
+                style={{ marginVertical: 15 }}
+              />
 
-          <Button
-            title="Forget Password?"
-            color="#016bb4"
-            type="clear"
-            containerStyle={{ alignItems: 'flex-start' }}
-            style={{marginVertical: 10}}
-          />
+              <Button
+                title="Forget Password?"
+                color="#016bb4"
+                type="clear"
+                containerStyle={{ alignItems: 'flex-start' }}
+                style={{ marginVertical: 10 }}
+              />
 
-          <Button
-            title="Continue"
-            color="white"
-            containerStyle={{ borderRadius: 20 }}
-            buttonStyle={{backgroundColor: '#016bb4'}}
-          />
-        </View>
+              <Button
+                title="Sign In"
+                color="white"
+                containerStyle={{ borderRadius: 20 }}
+                buttonStyle={{ backgroundColor: '#016bb4' }}
+                onPress={handleSubmit}
+                disabled={!isValid}
+              />
+            </View>
 
-        <Divider
-          width={1}
-          orientation="horizontal"
-          style={{
-            marginVertical: 30,
-            borderColor: '#e7e7e9',
-            position: 'relative',
-          }}
-        />
-
-        <Button
-          icon={
-            <Icon
-              name="google"
-              size={15}
-              color="black"
-              style={{ marginRight: 10 }}
+            <Divider
+              width={1}
+              orientation="horizontal"
+              style={{
+                marginVertical: 30,
+                borderColor: '#e7e7e9',
+                position: 'relative',
+              }}
             />
-          }
-          title="Sign in with Google"
-          iconLeft
-          type="outline"
-          buttonStyle={{ borderColor: 'gray', borderRadius: 20 }}
-          style={{ marginBottom: 10, color: 'gray' }}
-          titleStyle={{ color: 'gray' }}
-        />
 
-        <Button
-          icon={
-            <Icon
-              name="apple"
-              size={15}
-              color="black"
-              style={{ marginRight: 10 }}
+            <Button
+              icon={
+                <Icon
+                  name="google"
+                  size={15}
+                  color="black"
+                  style={{ marginRight: 10 }}
+                />
+              }
+              title="Sign in with Google"
+              iconLeft
+              type="outline"
+              buttonStyle={{ borderColor: 'gray', borderRadius: 20 }}
+              style={{ marginBottom: 10, color: 'gray' }}
+              titleStyle={{ color: 'gray' }}
             />
-          }
-          title="Sign in with Apple"
-          iconLeft
-          type="outline"
-          buttonStyle={{ borderColor: 'gray', borderRadius: 20 }}
-          style={{ marginBottom: 10, color: 'gray' }}
-          titleStyle={{ color: 'gray' }}
-        />
-      </View>
-    </View>
+
+            <Button
+              icon={
+                <Icon
+                  name="apple"
+                  size={15}
+                  color="black"
+                  style={{ marginRight: 10 }}
+                />
+              }
+              title="Sign in with Apple"
+              iconLeft
+              type="outline"
+              buttonStyle={{ borderColor: 'gray', borderRadius: 20 }}
+              style={{ marginBottom: 10, color: 'gray' }}
+              titleStyle={{ color: 'gray' }}
+            />
+          </View>
+        )}
+      </Formik>
+    </SafeAreaView>
   )
 }
 
@@ -131,7 +190,7 @@ const { ids, styles } = StyleSheet.create({
   formContainer: {
     justifyContent: 'center',
     '@media (min-width: 990px)': {
-      width: '60%',
+      width: '50%',
       marginVertical: 0,
       marginHorizontal: 'auto',
     },
