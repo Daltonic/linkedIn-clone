@@ -196,7 +196,7 @@ const SignupScreen = () => {
                     style={{ marginRight: 10 }}
                   />
                 }
-                title="Sign in with Google"
+                title="Sign up with Google"
                 iconLeft
                 type="outline"
                 buttonStyle={{ borderColor: 'gray', borderRadius: 20 }}
@@ -213,7 +213,7 @@ const SignupScreen = () => {
                     style={{ marginRight: 10 }}
                   />
                 }
-                title="Sign in with Apple"
+                title="Sign up with Apple"
                 iconLeft
                 type="outline"
                 buttonStyle={{ borderColor: 'gray', borderRadius: 20 }}
