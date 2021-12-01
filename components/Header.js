@@ -10,14 +10,14 @@ const Header = () => {
       <View style={styles.container} dataSet={{ media: ids.container }}>
         <View style={styles.headerLeft} dataSet={{ media: ids.headerLeft }}>
           <TouchableOpacity activeOpacity={0.5}>
-            <Avatar rounded source={require('../assets/default-avatar.jpg')} />
+            <Avatar rounded source={require('../assets/avatar.jpg')} />
           </TouchableOpacity>
         </View>
         <View style={styles.headerCenter} dataSet={{ media: ids.headerCenter }}>
           <Input
             placeholder="Search"
-            leftIcon={<Icon name="search" size={24} color="black" />}
-            rightIcon={<Icon name="qrcode" size={24} color="black" />}
+            leftIcon={<Icon name="search" size={24} color="gray" />}
+            rightIcon={<Icon name="qrcode" size={24} color="gray" />}
             containerStyle={{ borderRadius: 7, backgroundColor: '#eff2f7' }}
             inputContainerStyle={{ borderBottomWidth: 0 }}
             errorStyle={{ margin: 0 }}
@@ -25,7 +25,7 @@ const Header = () => {
         </View>
         <View style={styles.headerRight} dataSet={{ media: ids.headerRight }}>
           <TouchableOpacity activeOpacity={0.5}>
-            <Icon name="commenting" size={24} color="black" />
+            <Icon name="commenting" size={24} color="gray" />
           </TouchableOpacity>
         </View>
       </View>
@@ -42,7 +42,8 @@ const { ids, styles } = StyleSheet.create({
     shadowOffsetHeight: 2,
     shadowOpacity: 0.2,
     shadowRadius: 3,
-    paddingVertical: 5
+    paddingVertical: 5,
+    backgroundColor: 'white',
   },
   container: {
     flexDirection: 'row',

@@ -8,7 +8,7 @@ import BottomTabs from '../components/BottomTabs'
 
 const HomeScreen = ({ navigation }) => {
   return (
-    <SafeAreaView style={{ height: '100%' }}>
+    <SafeAreaView style={{ height: '100%', backgroundColor: '#f3f2ef' }}>
       <StatusBar style="light" />
       <Header />
       <ScrollView style={styles.container} dataSet={{ media: ids.container }}>
@@ -27,6 +27,7 @@ const { ids, styles } = StyleSheet.create({
       width: '50%',
       marginVertical: 0,
       marginHorizontal: 'auto',
+      paddingVertical: 10,
     },
     '@media (min-width: 690px) and (max-width: 989px)': {
       width: '75%',

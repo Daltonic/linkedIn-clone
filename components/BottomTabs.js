@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Text, TouchableOpacity, View } from 'react-native'
+import { Text, TouchableOpacity, View, Platform } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import StyleSheet from 'react-native-media-query'
 
@@ -24,33 +24,11 @@ const BottomTabs = () => {
           dataSet={{ media: ids.iconContainer }}
           style={[
             styles.iconContainer,
-            activeTab === 'Network' ? styles.active : styles.inactive,
-          ]}
-        >
-          <Icon name="users" size={24} color="gray" />
-          <Text style={{ color: 'gray' }}>My Network</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          dataSet={{ media: ids.iconContainer }}
-          style={[
-            styles.iconContainer,
             activeTab === 'Post' ? styles.active : styles.inactive,
           ]}
         >
           <Icon name="plus-square" size={24} color="gray" />
           <Text style={{ color: 'gray' }}>Post</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          dataSet={{ media: ids.iconContainer }}
-          style={[
-            styles.iconContainer,
-            activeTab === 'Notifications' ? styles.active : styles.inactive,
-          ]}
-        >
-          <Icon name="bell" size={24} color="gray" />
-          <Text style={{ color: 'gray' }}>Notifications</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -77,6 +55,14 @@ const { ids, styles } = StyleSheet.create({
     shadowOffsetHeight: 2,
     shadowOpacity: 0.2,
     shadowRadius: 3,
+    position: 'absolute',
+    bottom: 0,
+    backgroundColor: 'white',
+    ...Platform.select({
+      default: {
+        position: 'sticky',
+      },
+    }),
   },
   container: {
     flexDirection: 'row',
