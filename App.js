@@ -5,6 +5,7 @@ import LoginScreen from './screens/LoginScreen'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import SignupScreen from './screens/SignupScreen'
 import HomeScreen from './screens/HomeScreen'
+import AddPostScreen from './screens/AddPostScreen'
 
 const Stack = createStackNavigator()
 const screenOption = {
@@ -17,12 +18,13 @@ export default function App() {
     <SafeAreaProvider>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="HomeScreen"
+          initialRouteName="AddPostScreen"
           screenOptions={screenOption}
         >
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
           <Stack.Screen name="SignupScreen" component={SignupScreen} />
           <Stack.Screen name="HomeScreen" component={HomeScreen} />
+          <Stack.Screen name="AddPostScreen" component={AddPostScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
