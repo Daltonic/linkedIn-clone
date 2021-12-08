@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import StyleSheet from 'react-native-media-query'
 import {
   Text,
@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native'
-import { Avatar, Button, Input } from 'react-native-elements'
+import { Avatar, Input, Overlay } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 
 const ChatsListScreen = ({ navigation }) => {
@@ -26,47 +26,78 @@ const ChatsListScreen = ({ navigation }) => {
   )
 }
 
-const Header = ({ navigation }) => (
-  <View style={styles.headerWrapper} dataSet={{ media: ids.headerWrapper }}>
-    <View
-      style={[
-        styles.container,
-        {
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        },
-      ]}
-      dataSet={{ media: ids.container }}
-    >
+const Header = ({ navigation }) => {
+  const [visible, setVisible] = useState(false)
+  const [email, setEmail] = useState('')
+
+  const toggleOverlay = () => {
+    setVisible(!visible)
+  }
+
+  const addFriend = (email) => {
+    console.log(email)
+  }
+
+  return (
+    <View style={styles.headerWrapper} dataSet={{ media: ids.headerWrapper }}>
       <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
+        style={[
+          styles.container,
+          {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          },
+        ]}
+        dataSet={{ media: ids.container }}
       >
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <Icon name="long-arrow-alt-left" size={24} color="gray" />
-        </TouchableOpacity>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Icon name="long-arrow-alt-left" size={24} color="gray" />
+          </TouchableOpacity>
 
-        <Text style={{ fontWeight: 500, marginLeft: 20 }} h4>
-          Messaging
-        </Text>
+          <Text style={{ fontWeight: 500, marginLeft: 20 }} h4>
+            Messaging
+          </Text>
+        </View>
+
+        <View style={styles.flexify}>
+          <TouchableOpacity style={{ marginRight: 40 }}>
+            <Icon name="ellipsis-v" size={24} color="gray" />
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={toggleOverlay}>
+            <Icon name="edit" size={24} color="gray" />
+          </TouchableOpacity>
+        </View>
       </View>
 
-      <View style={styles.flexify}>
-        <TouchableOpacity style={{ marginRight: 40 }}>
-          <Icon name="ellipsis-v" size={24} color="gray" />
-        </TouchableOpacity>
-
-        <TouchableOpacity>
-          <Icon name="edit" size={24} color="gray" />
-        </TouchableOpacity>
-      </View>
+      <Overlay isVisible={visible} onBackdropPress={toggleOverlay}>
+        <View
+          style={[styles.flexify, { marginHorizontal: 5, marginTop: 10 }]}
+          dataSet={{ media: ids.flexify }}
+        >
+          <Input
+            placeholder="Add user by email..."
+            leftIcon={<Icon name="user" size={18} color="gray" />}
+            autoCapitalize="none"
+            keyboardType="email-address"
+            textContentType="emailAddress"
+            onChangeText={(text) => setEmail(text)}
+            onSubmitEditing={() => addFriend(email)}
+            value={email}
+          />
+        </View>
+      </Overlay>
     </View>
-  </View>
-)
+  )
+}
 
 const Search = () => (
   <View

@@ -7,6 +7,7 @@ import SignupScreen from './screens/SignupScreen'
 import HomeScreen from './screens/HomeScreen'
 import AddPostScreen from './screens/AddPostScreen'
 import ChatsListScreen from './screens/ChatsListScreen'
+import ChatScreen from './screens/ChatScreen'
 
 const Stack = createStackNavigator()
 const screenOption = {
@@ -19,7 +20,7 @@ export default function App() {
     <SafeAreaProvider>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName="ChatsListScreen"
+          initialRouteName="ChatScreen"
           screenOptions={screenOption}
         >
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
@@ -27,6 +28,7 @@ export default function App() {
           <Stack.Screen name="HomeScreen" component={HomeScreen} />
           <Stack.Screen name="AddPostScreen" component={AddPostScreen} />
           <Stack.Screen name="ChatsListScreen" component={ChatsListScreen} />
+          <Stack.Screen name="ChatScreen" component={ChatScreen} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
