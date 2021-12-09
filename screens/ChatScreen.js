@@ -103,15 +103,19 @@ const BottomInput = () => (
           justifyContent: 'center',
         }}
       >
-        <TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.shadow, { padding: 10, borderRadius: 50 }]}
+        >
           <Icon name="plus" size={24} color="blue" />
         </TouchableOpacity>
+
         <Input
           placeholder="Write a message..."
           inputContainerStyle={{ borderBottomWidth: 0 }}
+          containerStyle={{ backgroundColor: '#dedede', marginHorizontal: 15 }}
         />
 
-        <TouchableOpacity>
+        <TouchableOpacity style={{ padding: 10, borderRadius: 50 }}>
           <Icon name="microphone" size={24} color="gray" />
         </TouchableOpacity>
       </View>
@@ -155,5 +159,16 @@ const { ids, styles } = StyleSheet.create({
     borderBottomWidth: 1,
     borderColor: '#f5f5f5',
     paddingVertical: 10,
+  },
+  shadow: {
+    shadowColor: '#171717',
+    shadowOffsetWidth: 0,
+    shadowOffsetHeight: 2,
+    shadowOpacity: 0.2,
+    shadowRadius: 3,
+    backgroundColor: 'white',
+    paddingVertical: 5,
+    paddingHorizontal: 7,
+    borderRadius: 50,
   },
 })
