@@ -1,16 +1,28 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, TouchableOpacity } from 'react-native'
 import StyleSheet from 'react-native-media-query'
 import { Avatar, Input } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import { getAuth, signOut } from '../firebase'
 
 const Header = () => {
+  const auth = getAuth()
+
+  const signOutUser = async () => {
+    try {
+      await signOut(auth)
+      console.log('Signed out successfully')
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   return (
     <View style={styles.headerWrapper} dataSet={{ media: ids.headerWrapper }}>
       <View style={styles.container} dataSet={{ media: ids.container }}>
         <View style={styles.headerLeft} dataSet={{ media: ids.headerLeft }}>
-          <TouchableOpacity activeOpacity={0.5}>
-            <Avatar rounded source={require('../assets/avatar.jpg')} />
+          <TouchableOpacity onPress={signOutUser} activeOpacity={0.5}>
+            <Avatar rounded source={{ uri: auth?.currentUser?.photoURL }} />
           </TouchableOpacity>
         </View>
         <View style={styles.headerCenter} dataSet={{ media: ids.headerCenter }}>

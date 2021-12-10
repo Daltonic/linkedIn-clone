@@ -139,46 +139,7 @@ const AddPostScreen = ({ navigation }) => {
 
         <View style={{ height: '25%' }}></View>
 
-        <Text style={{ color: '#016bb4', fontWeight: 600 }}>Add hashtag</Text>
-
-        <View style={[styles.flexify, { marginTop: 10 }]}>
-          <View style={styles.flexify}>
-            <Icon
-              style={{ marginRight: 20 }}
-              name="camera"
-              size={24}
-              color="gray"
-            />
-            <Icon
-              style={{ marginRight: 20 }}
-              name="video"
-              size={24}
-              color="gray"
-            />
-            <Icon
-              style={{ marginRight: 20 }}
-              name="image"
-              size={24}
-              color="gray"
-            />
-            <Icon
-              style={{ marginRight: 20 }}
-              name="ellipsis-h"
-              size={24}
-              color="gray"
-            />
-          </View>
-
-          <View style={styles.flexify}>
-            <Icon
-              style={{ marginRight: 10 }}
-              name="comment"
-              size={24}
-              color="gray"
-            />
-            <Text>Anyone</Text>
-          </View>
-        </View>
+        <Footer />
       </View>
     </SafeAreaView>
   )
@@ -209,7 +170,7 @@ const Header = ({ navigation }) => (
           <Icon name="times" size={24} color="gray" />
         </TouchableOpacity>
 
-        <Text style={{ fontWeight: 500, marginLeft: 20 }} h4>
+        <Text style={{ fontWeight: 500, marginLeft: 20, fontSize: 16 }}>
           Share post
         </Text>
       </View>
@@ -219,6 +180,41 @@ const Header = ({ navigation }) => (
       </TouchableOpacity>
     </View>
   </View>
+)
+
+const Footer = () => (
+  <>
+    <Text style={{ color: '#016bb4', fontWeight: 600 }}>Add hashtag</Text>
+
+    <View style={[styles.flexify, { marginTop: 10 }]}>
+      <View style={styles.flexify}>
+        <Icon
+          style={{ marginRight: 20 }}
+          name="camera"
+          size={24}
+          color="gray"
+        />
+        <Icon style={{ marginRight: 20 }} name="video" size={24} color="gray" />
+        <Icon style={{ marginRight: 20 }} name="image" size={24} color="gray" />
+        <Icon
+          style={{ marginRight: 20 }}
+          name="ellipsis-h"
+          size={24}
+          color="gray"
+        />
+      </View>
+
+      <View style={styles.flexify}>
+        <Icon
+          style={{ marginRight: 10 }}
+          name="comment"
+          size={24}
+          color="gray"
+        />
+        <Text>Anyone</Text>
+      </View>
+    </View>
+  </>
 )
 
 export default AddPostScreen

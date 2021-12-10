@@ -1,10 +1,11 @@
 import React from 'react'
 import StyleSheet from 'react-native-media-query'
-import { SafeAreaView, View, Image } from 'react-native'
+import { SafeAreaView, View, Image, Platform, Alert } from 'react-native'
 import { Button, CheckBox, Divider, Input, Text } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
+import { getAuth, signInWithEmailAndPassword } from '../firebase'
 
 const loginFormSchema = Yup.object().shape({
   email: Yup.string().email().required('A email is required'),
@@ -13,9 +14,15 @@ const loginFormSchema = Yup.object().shape({
     .min(6, 'Password needs to be at least 6 characters long'),
 })
 
-const LoginScreen = () => {
-  const onLogin = (email, password) => {
-    console.log({ email, password })
+const LoginScreen = ({ navigation }) => {
+  const auth = getAuth()
+  const onLogin = async (email, password) => {
+    try {
+      await signInWithEmailAndPassword(auth, email, password)
+      console.log('Firebase Login Successful')
+    } catch (error) {
+      Platform.OS != 'web' ? Alert.alert(error.message) : alert(error.message)
+    }
   }
 
   return (
@@ -26,7 +33,12 @@ const LoginScreen = () => {
           dataSet={{ media: ids.logo }}
           source={require('../assets/logo.png')}
         />
-        <Button title="Join now" color="#016bb4" type="clear" />
+        <Button
+          onPress={() => navigation.navigate('SignupScreen')}
+          title="Join now"
+          color="#016bb4"
+          type="clear"
+        />
       </View>
 
       <Formik
