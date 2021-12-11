@@ -3,22 +3,76 @@ import { Image, TouchableOpacity, View } from 'react-native'
 import { Avatar, Button, Divider, Text } from 'react-native-elements'
 import StyleSheet from 'react-native-media-query'
 import Icon from 'react-native-vector-icons/FontAwesome5'
+import {
+  getAuth,
+  getFirestore,
+  doc,
+  updateDoc,
+  arrayUnion,
+  arrayRemove,
+} from '../firebase'
 
-const Card = () => {
+const Card = ({ post }) => {
+  const auth = getAuth()
+  const db = getFirestore()
+
+  const handleLike = async (post) => {
+    const currentLikeStatus = !post.liked.includes(auth.currentUser.email)
+    const likesRef = doc(db, `users/${post.email}/posts`, post.id)
+
+    try {
+      await updateDoc(likesRef, {
+        liked: currentLikeStatus
+          ? arrayUnion(auth.currentUser.email)
+          : arrayRemove(auth.currentUser.email),
+      })
+      console.log('Document successfully updated!')
+    } catch (error) {
+      console.log('Error updating document: ', error)
+    }
+  }
+
+  const timeAgo = (date) => {
+    let seconds = Math.floor((new Date() - date) / 1000)
+    let interval = seconds / 31536000
+
+    if (interval > 1) {
+      return Math.floor(interval) + 'yr'
+    }
+    interval = seconds / 2592000
+    if (interval > 1) {
+      return Math.floor(interval) + 'mo'
+    }
+    interval = seconds / 86400
+    if (interval > 1) {
+      return Math.floor(interval) + 'd'
+    }
+    interval = seconds / 3600
+    if (interval > 1) {
+      return Math.floor(interval) + 'h'
+    }
+    interval = seconds / 60
+    if (interval > 1) {
+      return Math.floor(interval) + 'm'
+    }
+    return Math.floor(seconds) + 's'
+  }
+
   return (
     <View style={[styles.card]} dataSet={{ media: ids.card }}>
       <View style={[styles.shadowProp]} dataSet={{ media: ids.container }}>
         <View style={styles.container}>
           <TouchableOpacity>
-            <Avatar rounded source={require('../assets/avatar.jpg')} />
+            <Avatar rounded source={{ uri: post.pic }} />
           </TouchableOpacity>
           <View style={styles.headerCenter}>
-            <Text style={{ fontWeight: 600 }}>Darlington Gospel</Text>
+            <Text style={{ fontWeight: 600 }}>{post.fullname}</Text>
             <Text style={styles.grayText} dataSet={{ media: ids.grayText }}>
-              Sr. Software Engineer - IOS at CometChat
+              {post.profession}
             </Text>
             <Text style={styles.grayText} dataSet={{ media: ids.grayText }}>
-              8d . <Icon name="globe" size={14} color="gray" />{' '}
+              {timeAgo(post.timestamp.toDate())} .{' '}
+              <Icon name="globe" size={14} color="gray" />{' '}
             </Text>
           </View>
           <TouchableOpacity>
@@ -28,15 +82,14 @@ const Card = () => {
 
         <View style={styles.container}>
           <Text>
-            I'm not so happy to share this message with you, being that it isn't
-            even real, its just me trying to make a lengthy text...
+            {post.description.length > 300
+              ? post.description.slice(0, 300) + '...'
+              : post.description}
           </Text>
         </View>
 
         <Image
-          source={{
-            uri: 'https://cdn.pixabay.com/photo/2021/11/13/23/06/tree-6792528_960_720.jpg',
-          }}
+          source={{ uri: post.imgURL }}
           style={{ width: '100%', height: 400, resizeMode: 'cover' }}
         />
 
@@ -59,11 +112,14 @@ const Card = () => {
             <View style={[styles.iconWrapper, { backgroundColor: '#ffcf40' }]}>
               <Icon name="lightbulb" size={12} color="white" />
             </View>
-            <Text style={{ marginHorizontal: 5 }}>5</Text>
+            <Text style={{ marginHorizontal: 5 }}>{post.liked.length}</Text>
           </View>
 
           <View>
-            <Text style={{ color: 'gray' }}>9 comments</Text>
+            <Text style={{ color: 'gray' }}>
+              {post.comments.length}
+              {post.comments.length == 1 ? ' comment' : ' comments'}
+            </Text>
           </View>
         </View>
 
@@ -81,10 +137,25 @@ const Card = () => {
           <Button
             type="clear"
             iconPosition="top"
-            icon={<Icon name="thumbs-up" size={15} color="gray" />}
-            titleStyle={{ color: 'gray' }}
+            icon={
+              <Icon
+                name="thumbs-up"
+                size={15}
+                color={
+                  post.liked.includes(auth.currentUser.email)
+                    ? '#378fe9'
+                    : 'gray'
+                }
+              />
+            }
+            titleStyle={{
+              color: post.liked.includes(auth.currentUser.email)
+                ? '#378fe9'
+                : 'gray',
+            }}
             containerStyle={{ flex: 1 }}
             title="Like"
+            onPress={() => handleLike(post)}
           />
           <Button
             type="clear"
@@ -120,7 +191,7 @@ export default Card
 
 const { ids, styles } = StyleSheet.create({
   card: {
-    paddingVertical: 45,
+    paddingBottom: 20,
     paddingHorizontal: 25,
     width: '100%',
     marginVertical: 10,
