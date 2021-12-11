@@ -3,7 +3,7 @@ import { Text, TouchableOpacity, View, Platform } from 'react-native'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import StyleSheet from 'react-native-media-query'
 
-const BottomTabs = () => {
+const BottomTabs = ({ navigation }) => {
   const [activeTab, setActiveTab] = useState('Home')
 
   return (
@@ -26,6 +26,7 @@ const BottomTabs = () => {
             styles.iconContainer,
             activeTab === 'Post' ? styles.active : styles.inactive,
           ]}
+          onPress={() => navigation.push('AddPostScreen')}
         >
           <Icon name="plus-square" size={24} color="gray" />
           <Text style={{ color: 'gray' }}>Post</Text>

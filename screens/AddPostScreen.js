@@ -1,10 +1,19 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { View, TouchableOpacity, SafeAreaView } from 'react-native'
 import { Text, Button, Avatar, Input } from 'react-native-elements'
 import StyleSheet from 'react-native-media-query'
 import Icon from 'react-native-vector-icons/FontAwesome5'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
+import {
+  getAuth,
+  collection,
+  addDoc,
+  getDoc,
+  doc,
+  getFirestore,
+  serverTimestamp,
+} from '../firebase'
 
 const addPostFormSchema = Yup.object().shape({
   title: Yup.string()
@@ -22,8 +31,45 @@ const addPostFormSchema = Yup.object().shape({
 })
 
 const AddPostScreen = ({ navigation }) => {
-  const addPost = (title, imgURL, description) => {
-    console.log({ title, imgURL, description })
+  const [profile, setProfile] = useState(null)
+
+  const auth = getAuth()
+  const db = getFirestore()
+
+  useEffect(() => getProfile(), [])
+
+  const getProfile = async () => {
+    const userDocRef = doc(db, `users/${auth.currentUser.email}`)
+    const docSnap = await getDoc(userDocRef)
+    const data = docSnap.data()
+
+    setProfile({
+      fullname: data.fullname,
+      pic: data.pic,
+      uid: data.uid,
+      email: data.email,
+    })
+  }
+
+  const addPost = async (title, imgURL, description) => {
+    try {
+      await addDoc(collection(db, `users/${profile.email}`, 'posts'), {
+        timestamp: serverTimestamp(),
+        fullname: profile.fullname,
+        pic: profile.pic,
+        uid: profile.uid,
+        email: profile.email,
+        title,
+        description,
+        imgURL,
+        liked: [],
+        comments: [],
+      })
+
+      navigation.goBack()
+    } catch (error) {
+      console.log(error.message)
+    }
   }
 
   return (
@@ -68,9 +114,9 @@ const AddPostScreen = ({ navigation }) => {
             imgURL: '',
             description: '',
           }}
-          onSubmit={(values) =>
+          onSubmit={(values) => {
             addPost(values.title, values.imgURL, values.description)
-          }
+          }}
           validationSchema={addPostFormSchema}
           validateOnMount={true}
         >
@@ -122,7 +168,6 @@ const AddPostScreen = ({ navigation }) => {
                 onBlur={handleBlur('description')}
                 value={values.description}
                 inputContainerStyle={{ borderBottomWidth: 0 }}
-                onSubmitEditing={addPost}
               />
 
               <Button

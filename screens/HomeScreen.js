@@ -14,7 +14,7 @@ const HomeScreen = ({ navigation }) => {
       <ScrollView style={styles.container} dataSet={{ media: ids.container }}>
         <Card />
       </ScrollView>
-      <BottomTabs />
+      <BottomTabs navigation={navigation} />
     </SafeAreaView>
   )
 }
