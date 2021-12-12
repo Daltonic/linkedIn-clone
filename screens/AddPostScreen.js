@@ -83,9 +83,9 @@ const AddPostScreen = ({ navigation }) => {
             marginVertical: 20,
           }}
         >
-          <Avatar rounded source={require('../assets/avatar.jpg')} />
+          <Avatar rounded source={{ uri: profile?.pic }} />
           <View style={{ marginLeft: 10 }}>
-            <Text style={{ fontWeight: 500 }}>Darlington Gospel</Text>
+            <Text style={{ fontWeight: 500 }}>{profile?.fullname}</Text>
             <Button
               icon={
                 <Icon

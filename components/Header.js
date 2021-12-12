@@ -1,12 +1,14 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { View, TouchableOpacity } from 'react-native'
 import StyleSheet from 'react-native-media-query'
 import { Avatar, Input } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { getAuth, signOut } from '../firebase'
 
-const Header = () => {
+const Header = ({ navigation }) => {
   const auth = getAuth()
+  const PLACEHOLDER_AVATAR =
+    'https://upload.wikimedia.org/wikipedia/commons/7/7c/Profile_avatar_placeholder_large.png'
 
   const signOutUser = async () => {
     try {
@@ -22,7 +24,12 @@ const Header = () => {
       <View style={styles.container} dataSet={{ media: ids.container }}>
         <View style={styles.headerLeft} dataSet={{ media: ids.headerLeft }}>
           <TouchableOpacity onPress={signOutUser} activeOpacity={0.5}>
-            <Avatar rounded source={{ uri: auth?.currentUser?.photoURL }} />
+            <Avatar
+              rounded
+              source={{
+                uri: auth?.currentUser?.photoURL || PLACEHOLDER_AVATAR,
+              }}
+            />
           </TouchableOpacity>
         </View>
         <View style={styles.headerCenter} dataSet={{ media: ids.headerCenter }}>
@@ -36,7 +43,10 @@ const Header = () => {
           />
         </View>
         <View style={styles.headerRight} dataSet={{ media: ids.headerRight }}>
-          <TouchableOpacity activeOpacity={0.5}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('ChatsListScreen')}
+            activeOpacity={0.5}
+          >
             <Icon name="commenting" size={24} color="gray" />
           </TouchableOpacity>
         </View>

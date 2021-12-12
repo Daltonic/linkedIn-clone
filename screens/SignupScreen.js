@@ -20,6 +20,8 @@ import {
   doc,
   updateProfile,
 } from '../firebase'
+import { CometChat } from '@cometchat-pro/react-native-chat'
+import { CONSTANTS } from '../CONSTANTS'
 
 const signupFormSchema = Yup.object().shape({
   email: Yup.string().email().required('A email is required.'),
@@ -42,13 +44,11 @@ const signupFormSchema = Yup.object().shape({
 })
 
 const SignupScreen = ({ navigation }) => {
+  const auth = getAuth()
+  const db = getFirestore()
+
   const onSignup = async (email, password, fullname, profession, imgURL) => {
-    console.log({ email, password, fullname, profession, imgURL })
-
     try {
-      const auth = getAuth()
-      const db = getFirestore()
-
       const authed = await createUserWithEmailAndPassword(auth, email, password)
       const userDocRef = doc(db, 'users', authed.user.email)
 
@@ -59,18 +59,40 @@ const SignupScreen = ({ navigation }) => {
         pic: imgURL,
         uid: authed.user.uid,
       }).then(() => {
-        updateProfile(authed.user, {
-          displayName: fullname,
-          photoURL: imgURL,
-        })
-          .then(() => console.log('Profile Updated!'))
-          .catch((error) => console.log(error.message))
+        signInWithCometChat(authed.user.uid, fullname, imgURL)
+        updateUserProfile(authed.user, fullname, imgURL)
+        console.log('Firebase Signed Up Successful...')
       })
-
-      console.log('Firebase Signed Up Successful...')
     } catch (error) {
       Platform.OS != 'web' ? Alert.alert(error.message) : alert(error.message)
     }
+  }
+
+  const updateUserProfile = (user, displayName, photoURL) => {
+    updateProfile(user, {
+      displayName,
+      photoURL,
+    })
+      .then(() => console.log('Profile Updated!'))
+      .catch((error) => console.log(error.message))
+  }
+
+  const signInWithCometChat = (uid, name, avatar) => {
+    let authKey = CONSTANTS.Auth_Key
+
+    let user = new CometChat.User(uid)
+
+    user.setName(name)
+    user.setAvatar(avatar)
+
+    CometChat.createUser(user, authKey).then(
+      (user) => {
+        console.log('user created', user)
+      },
+      (error) => {
+        console.log('error', error)
+      }
+    )
   }
 
   return (

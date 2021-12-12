@@ -32,7 +32,7 @@ const HomeScreen = ({ navigation }) => {
   return (
     <SafeAreaView style={{ height: '100%', backgroundColor: '#f3f2ef' }}>
       <StatusBar style="light" />
-      <Header />
+      <Header navigation={navigation} />
       <ScrollView
         style={[styles.container, { paddingTop: 30 }]}
         dataSet={{ media: ids.container }}

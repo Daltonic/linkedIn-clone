@@ -6,6 +6,8 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import { getAuth, signInWithEmailAndPassword } from '../firebase'
+import { CometChat } from '@cometchat-pro/react-native-chat'
+import { CONSTANTS } from '../CONSTANTS'
 
 const loginFormSchema = Yup.object().shape({
   email: Yup.string().email().required('A email is required'),
@@ -16,13 +18,28 @@ const loginFormSchema = Yup.object().shape({
 
 const LoginScreen = ({ navigation }) => {
   const auth = getAuth()
+
   const onLogin = async (email, password) => {
     try {
-      await signInWithEmailAndPassword(auth, email, password)
+      const authed = await signInWithEmailAndPassword(auth, email, password)
+      loginWithCometChat(authed.user.uid)
+
       console.log('Firebase Login Successful')
     } catch (error) {
       Platform.OS != 'web' ? Alert.alert(error.message) : alert(error.message)
     }
+  }
+
+  const loginWithCometChat = (UID) => {
+    const authKey = CONSTANTS.Auth_Key
+    CometChat.login(UID, authKey).then(
+      (user) => {
+        console.log('Login Successful:', { user })
+      },
+      (error) => {
+        console.log('Login failed with exception:', { error })
+      }
+    )
   }
 
   return (
