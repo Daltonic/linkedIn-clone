@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import StyleSheet from 'react-native-media-query'
 import {
   Text,
@@ -9,18 +9,35 @@ import {
 } from 'react-native'
 import { Avatar, Input, Overlay } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome5'
+import { CometChat } from '@cometchat-pro/react-native-chat'
 
 const ChatsListScreen = ({ navigation }) => {
+  const [users, setUsers] = useState([])
+
+  useEffect(() => getChatList(), [])
+
+  const getChatList = () => {
+    const limit = 30
+    const usersRequest = new CometChat.UsersRequestBuilder()
+      .setLimit(limit)
+      .build()
+
+    usersRequest
+      .fetchNext()
+      .then((userList) => setUsers(userList))
+      .catch((error) => {
+        console.log('User list fetching failed with error:', error)
+      })
+  }
+
   return (
     <SafeAreaView>
       <Header navigation={navigation} />
       <ScrollView style={styles.container} dataSet={{ media: ids.container }}>
         <Search />
-        <ListItem />
-        <ListItem />
-        <ListItem />
-        <ListItem />
-        <ListItem />
+        {users.map((user, index) => (
+          <ListItem key={index} user={user} navigation={navigation} />
+        ))}
       </ScrollView>
     </SafeAreaView>
   )
@@ -114,22 +131,29 @@ const Search = () => (
   </View>
 )
 
-const ListItem = () => (
+const ListItem = ({ navigation, user }) => (
   <TouchableOpacity
     style={[styles.flexify, styles.bordered]}
     dataSet={{ media: ids.flexify }}
+    onPress={() =>
+      navigation.navigate('ChatScreen', {
+        id: user.uid,
+        name: user.name,
+        avatar: user.avatar,
+      })
+    }
   >
     <View style={styles.flexify} dataSet={{ media: ids.flexify }}>
-      <Avatar rounded source={require('../assets/avatar.jpg')} />
+      <Avatar rounded source={{ uri: user.avatar }} />
       <View style={{ marginLeft: 10 }}>
         <Text h4 style={{ fontWeight: 600 }}>
-          Dave Westole
+          {user.name}
         </Text>
-        <Text>Nice to meet you too!</Text>
+        {/* <Text>Nice to meet you too!</Text> */}
       </View>
     </View>
 
-    <Text>Nov 12</Text>
+    {/* <Text>Nov 12</Text> */}
   </TouchableOpacity>
 )
 

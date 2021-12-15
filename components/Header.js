@@ -4,6 +4,7 @@ import StyleSheet from 'react-native-media-query'
 import { Avatar, Input } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { getAuth, signOut } from '../firebase'
+import { CometChat } from '@cometchat-pro/react-native-chat'
 
 const Header = ({ navigation }) => {
   const auth = getAuth()
@@ -12,8 +13,16 @@ const Header = ({ navigation }) => {
 
   const signOutUser = async () => {
     try {
-      await signOut(auth)
-      console.log('Signed out successfully')
+      await signOut(auth).then(() => {
+        CometChat.logout().then(
+          () => {
+            console.log('Logout completed successfully')
+          },
+          (error) => {
+            console.log('Logout failed with exception:', { error })
+          }
+        )
+      })
     } catch (error) {
       console.log(error)
     }
