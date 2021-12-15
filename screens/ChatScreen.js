@@ -144,14 +144,7 @@ const Header = ({ navigation, route }) => {
   return (
     <View style={styles.headerWrapper} dataSet={{ media: ids.headerWrapper }}>
       <View
-        style={[
-          styles.container,
-          {
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-          },
-        ]}
+        style={[styles.container, styles.flexify, { paddingHorizontal: 0 }]}
         dataSet={{ media: ids.container }}
       >
         <View
