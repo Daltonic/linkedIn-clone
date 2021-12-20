@@ -41,6 +41,15 @@ To run the demo follow these steps:
      measurementId: 'xxx-xxx-xxx',
    }
    ```
+3. Create a new file at the root of the folder called "CONSTANTS.js" and paste the codes below into it.
+3. ```js
+   export const CONSTANTS = {
+      APP_ID: 'xxx-xxx-xxx',
+      REGION: 'us',
+      Auth_Key: 'xxx-xxx-xxx-xxx-xxx-xxx-xxx-xxx',
+   }
+   ```
+4. Include "CONSTANTS.js" in the gitIgnore file stopping from public display. 
 3. Open new terminal and run the following commands.
    ```sh
    yarn install
