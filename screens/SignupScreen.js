@@ -77,10 +77,10 @@ const SignupScreen = ({ navigation }) => {
       .catch((error) => console.log(error.message))
   }
 
-  const signInWithCometChat = (uid, name, avatar) => {
+  const signInWithCometChat = (UID, name, avatar) => {
     let authKey = CONSTANTS.Auth_Key
 
-    let user = new CometChat.User(uid)
+    let user = new CometChat.User(UID)
 
     user.setName(name)
     user.setAvatar(avatar)
@@ -88,9 +88,22 @@ const SignupScreen = ({ navigation }) => {
     CometChat.createUser(user, authKey).then(
       (user) => {
         console.log('user created', user)
+        loginWithCometChat(UID)
       },
       (error) => {
         console.log('error', error)
+      }
+    )
+  }
+
+  const loginWithCometChat = (UID) => {
+    const authKey = CONSTANTS.Auth_Key
+    CometChat.login(UID, authKey).then(
+      (user) => {
+        console.log('Login Successful:', { user })
+      },
+      (error) => {
+        console.log('Login failed with exception:', { error })
       }
     )
   }
